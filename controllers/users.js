@@ -17,7 +17,6 @@ const createUser = async (req, res) => {
       return res.status(400).send({message: 'Переданы некорректные данные при создании пользователя.'});
     }
     defResponse(res);
-
   }
 };
 
@@ -57,6 +56,9 @@ const updateUser = async (req, res)=>{
     }
     res.status(200).send(user);
   }catch(e){
+    if(e.name === 'ValidationError'){
+      return res.status(400).send({message: 'Переданы некорректные данные при обновлении профиля.'});
+    }
     defResponse(res);
   }
 }
