@@ -7,6 +7,10 @@ const defResponse = (res) => {
 
 const createUser = async (req, res) => {
   try{
+  const { name, about, avatar } = req.body;
+  if(!name || !about || !avatar){
+    return res.status(400).send({message: 'Переданы некорректные данные при создании пользователя.'});
+  }
   const user = await new User(req.body).save();
   if(!user){
     return res.status(400).send({message: 'Переданы некорректные данные при создании пользователя.'});
