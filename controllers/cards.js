@@ -73,6 +73,9 @@ const delLike = async (req, res) => {
     }
     res.send(card);
   }catch (e){
+    if(e.name === 'CastError'){
+      return res.status(400).send({message: 'Передан некорректный _id карточки.'});
+    }
     defResponse();
   }
 }
