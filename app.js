@@ -25,6 +25,12 @@ app.use((req, res, next) => {
 
 app.use(userRoutes);
 app.use(cardRoutes);
+app.use((req, res, next) => {
+  if(res.status(404)){
+      res.send({message: 'Неправильный адрес запроса.'});
+  }
+  next();
+})
 
 app.listen(PORT, () => {
   console.log('Server run');
