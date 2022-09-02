@@ -41,8 +41,11 @@ const delCardById = async (req, res) => {
     if(!card){
       return res.status(404).send({message: 'Карточка с указанным _id не найдена.'});
     }
-    res.send('Карточка успешно удалена!');
+    res.send({message: 'Карточка успешно удалена!'});
   }catch (e){
+    if(e.name === 'ValidationError'){
+      return res.status(400).send({message: 'Передан некорректный _id карточки.'});
+    }
     defResponse();
   }
 };
