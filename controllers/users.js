@@ -1,4 +1,7 @@
+const Joi = require('joi');
 const User = require('../models/User');
+const mongoose = require("mongoose");
+const {types} = require("joi");
 const ERROR_CODE = 500;
 const ERROR_MESSAGE = {message: 'Ошибка по умолчанию.'};
 const defResponse = (res) => {
@@ -40,6 +43,9 @@ const getUserById = async (req, res) => {
     }
     res.send(user);
   }catch (e){
+    if(e.name === 'CastError'){
+      return res.status(400).send({message: 'Передан не корректный _id пользователя.'});
+    }
     defResponse(res);
   }
 };
