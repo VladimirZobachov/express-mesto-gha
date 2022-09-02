@@ -1,7 +1,4 @@
-const Joi = require('joi');
 const User = require('../models/User');
-const mongoose = require("mongoose");
-const {types} = require("joi");
 const ERROR_CODE = 500;
 const ERROR_MESSAGE = {message: 'Ошибка по умолчанию.'};
 const defResponse = (res) => {
@@ -54,13 +51,14 @@ const updateUser = async (req, res)=>{
   try{
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, {name: name, about: about});
+    const userUpdate = await User.findById(req.user._id);
     if(!name || !about){
       return res.status(400).send({message: 'Переданы некорректные данные при обновлении профиля.'});
     }
     if(!user){
       return res.status(404).send({message: 'Пользователь с указанным _id не найден.'});
     }
-    res.status(200).send(user);
+    res.status(200).send(userUpdate);
   }catch(e){
     if(e.name === 'ValidationError'){
       return res.status(400).send({message: 'Переданы некорректные данные при обновлении профиля.'});
@@ -73,13 +71,14 @@ const updateUserAvatar = async (req, res)=>{
   try{
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, {avatar: avatar});
+    const userUpdate = await User.findById(req.user._id);
     if(!avatar){
       return res.status(400).send({message: 'Переданы некорректные данные при обновлении аватара.'});
     }
     if(!user){
       return res.status(404).send({message: 'Пользователь с указанным _id не найден.'});
     }
-    res.status(200).send(user);
+    res.status(200).send(userUpdate);
   }catch(e){
     defResponse(res);
   }
