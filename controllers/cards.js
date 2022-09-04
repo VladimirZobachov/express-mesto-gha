@@ -18,8 +18,8 @@ const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 const createCard = async (req, res) => {
   try {
     const { name, link } = req.body;
-    const owner = req.user._id;
-    const card = await new Card({ name, link, owner }).save();
+    const ref = req.user._id;
+    const card = await new Card({ name, link, ref }).save();
     return res.status(OK).send(card);
   } catch (e) {
     if (e.name === 'ValidationError') {
