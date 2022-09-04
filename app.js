@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const {userRoutes} = require("./routes/users");
-const {cardRoutes} = require("./routes/cards");
+const { userRoutes } = require('./routes/users');
+const { cardRoutes } = require('./routes/cards');
+const { NOT_FOUND_PAGE_MESSAGE } = require('./const');
 
 const { PORT = 3000 } = process.env;
 
@@ -26,12 +27,9 @@ app.use((req, res, next) => {
 app.use(userRoutes);
 app.use(cardRoutes);
 app.use((req, res, next) => {
-  if(res.status(404)){
-      res.send({message: 'Неправильный адрес запроса.'});
-  }
+  res.send(NOT_FOUND_PAGE_MESSAGE);
   next();
-})
+});
 
 app.listen(PORT, () => {
-  console.log('Server run');
 });

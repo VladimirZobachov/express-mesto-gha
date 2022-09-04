@@ -3,17 +3,17 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    minLength: 2,
-    maxLength: 30,
+    required: [true, 'поле name является обязательным для заполнения'],
+    minLength: [2, 'минимальное значение поля name 2 символа'],
+    maxLength: [30, 'максимально значение поля name 30 символов'],
   },
   link: {
     type: String,
-    required: true,
+    required: [true, 'поле link является обязательным для заполнения'],
   },
-  owner: {
+  ref: {
     type: mongoose.Types.ObjectId,
-    required: true,
+    required: [true, 'поле ref является обязательным для заполнения'],
   },
   likes: {
     type: [mongoose.Types.ObjectId],
