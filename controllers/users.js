@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const {
   OK,
   ERROR_CODE,
@@ -14,17 +16,30 @@ const {
 
 const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
-const createUser = async (req, res) => {
-  try {
-    const user = await new User(req.body).save();
-    return res.status(OK).send(user);
-  } catch (e) {
-    if (e.name === 'ValidationError') {
-      return res.status(ERROR_CODE).send(ERROR_CODE_USER_CREATE_MESSAGE);
-    }
-    return defResponse(res);
-  }
+const createUser = (req, res, next) => {
+  const {
+    email,
+    password,
+    name,
+    about,
+    avatar
+  } = req.body;
+  bcrypt.hash(password, 10)
+    .then(hashedPassword =>{
+      User.create({
+        email,
+        password: hashedPassword,
+        name,
+        about,
+        avatar
+      })
+      .then((user)=>{
+        res.send(user);
+      })
+      .catch(next);
+    })
 };
+
 
 const getUsers = async (req, res) => {
   try {
@@ -85,10 +100,35 @@ const updateUserAvatar = async (req, res) => {
   }
 };
 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .select('+password')
+    .orFail(() => new Error('Пользователь не найден'))
+    .then((user)=>{
+      bcrypt.compare(password, user.password)
+        .then((isUserValid) => {
+          if (isUserValid) {
+            const token = jwt.sign({ _id: user._id }, 'SECRET');
+            res.cookie('jwt', token, {
+              maxAge: 3600000,
+              httpOnly: true,
+              sameSite: true,
+            })
+            res.send({data: user.toJSON()});
+          } else {
+            res.status(403).send({message: 'неправильный пароль'});
+          }
+        })
+    })
+    .catch(next);
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUserById,
   updateUser,
   updateUserAvatar,
+  login
 };
