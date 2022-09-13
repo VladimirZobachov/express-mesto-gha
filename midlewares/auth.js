@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
-const auth = (res, req, next) =>{
+
+const auth = (res, req, next) => {
   const token = req.cookies.jwt;
   let payload;
-  try{
+  try {
     payload = jwt.verify(token, 'SECRET');
-  }catch (err){
+  } catch (err) {
     next(err);
   }
   req.user = payload;

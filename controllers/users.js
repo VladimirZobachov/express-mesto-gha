@@ -1,13 +1,12 @@
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const User = require('../models/User');
 const {
   OK,
   ERROR_CODE,
   NOT_FOUND,
   ERROR_MESSAGE,
   ERROR_CODE_USER_MESSAGE,
-  ERROR_CODE_USER_CREATE_MESSAGE,
   ERROR_CODE_USER_UPDATE_MESSAGE,
   ERROR_CODE_AVATAR_UPDATE_MESSAGE,
   NOT_FOUND_USERS_MESSAGE,
@@ -22,24 +21,23 @@ const createUser = (req, res, next) => {
     password,
     name,
     about,
-    avatar
+    avatar,
   } = req.body;
   bcrypt.hash(password, 10)
-    .then(hashedPassword =>{
+    .then((hashedPassword) => {
       User.create({
         email,
         password: hashedPassword,
         name,
         about,
-        avatar
+        avatar,
       })
-      .then((user)=>{
-        res.send(user);
-      })
-      .catch(next);
-    })
+        .then((user) => {
+          res.send(user);
+        })
+        .catch(next);
+    });
 };
-
 
 const getUsers = async (req, res) => {
   try {
@@ -105,7 +103,7 @@ const login = (req, res, next) => {
   User.findOne({ email })
     .select('+password')
     .orFail(() => new Error('Пользователь не найден'))
-    .then((user)=>{
+    .then((user) => {
       bcrypt.compare(password, user.password)
         .then((isUserValid) => {
           if (isUserValid) {
@@ -114,12 +112,12 @@ const login = (req, res, next) => {
               maxAge: 3600000,
               httpOnly: true,
               sameSite: true,
-            })
-            res.send({data: user.toJSON()});
+            });
+            res.send({ data: user.toJSON() });
           } else {
-            res.status(403).send({message: 'неправильный пароль'});
+            res.status(401).send({ message: 'Неправильная почта или пароль' });
           }
-        })
+        });
     })
     .catch(next);
 };
@@ -130,5 +128,5 @@ module.exports = {
   getUserById,
   updateUser,
   updateUserAvatar,
-  login
+  login,
 };

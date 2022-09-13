@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
+const validEmail = require('validator');
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
     required: [true, 'поле name является обязательным для заполнения'],
+    validate: {
+      validator(v) {
+        return validEmail.isEmail(v);
+      },
+      message: 'Введите пожалуйста Email',
+    },
   },
   password: {
     type: String,
@@ -29,10 +36,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.methods.toJSON = function (){
+userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
   return user;
-}
+};
 
 module.exports = mongoose.model('user', userSchema);
