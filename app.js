@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const routers = require('./routes');
-const auth = require("./midlewares/auth");
+const auth = require('./midlewares/auth');
 const { createUser, login } = require('./controllers/users');
 
 const app = express();
