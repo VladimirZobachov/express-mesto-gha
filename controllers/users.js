@@ -15,7 +15,7 @@ const {
 
 const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
-const createUser = (req, res, next) => {
+const createUser = async (req, res, next) => {
   const {
     email,
     password,
@@ -23,50 +23,50 @@ const createUser = (req, res, next) => {
     about,
     avatar,
   } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hashedPassword) => {
-      User.create({
-        email,
-        password: hashedPassword,
-        name,
-        about,
-        avatar,
-      })
-        .then((user) => {
-          res.send(user);
-        })
-        .catch(next);
+  try{
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      name,
+      about,
+      avatar,
     });
+    res.send(user);
+  }catch(err){
+    next(err);
+  }
+
 };
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     if (!users) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USERS_MESSAGE);
     }
     return res.send(users);
-  } catch (e) {
-    return defResponse(res);
+  } catch (err) {
+    next(err);
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USER_MESSAGE);
     }
     return res.send(user);
-  } catch (e) {
-    if (e.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'CastError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_MESSAGE);
     }
-    return defResponse(res);
+    next(err);
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { name, about }, { new: true });
@@ -74,15 +74,15 @@ const updateUser = async (req, res) => {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_UPDATE_MESSAGE);
     }
     return res.status(OK).send(user);
-  } catch (e) {
-    if (e.name === 'ValidationError') {
+  } catch (err) {
+    if (err.name === 'ValidationError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_UPDATE_MESSAGE);
     }
-    return defResponse(res);
+    next(err);
   }
 };
 
-const updateUserAvatar = async (req, res) => {
+const updateUserAvatar = async (req, res, next) => {
   try {
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { avatar }, { new: true });
@@ -90,11 +90,11 @@ const updateUserAvatar = async (req, res) => {
       return res.status(ERROR_CODE).send(ERROR_CODE_AVATAR_UPDATE_MESSAGE);
     }
     return res.status(OK).send(user);
-  } catch (e) {
-    if (e.name === 'ValidationError') {
+  } catch (err) {
+    if (err.name === 'ValidationError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_AVATAR_UPDATE_MESSAGE);
     }
-    return defResponse(res);
+    next(err);
   }
 };
 
