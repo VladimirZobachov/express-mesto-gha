@@ -5,8 +5,8 @@ const cookieParser = require('cookie-parser');
 const routers = require('./routes');
 const auth = require('./midlewares/auth');
 const { createUser, login } = require('./controllers/users');
-const {errorHandler} = require("./midlewares/error");
-const {validateUserBody} = require("./validator");
+const { errorHandler } = require('./midlewares/error');
+const { validateUserBody } = require('./validator');
 
 const app = express();
 
@@ -26,6 +26,5 @@ app.post('/signin', login);
 app.use(auth);
 app.use(routers);
 app.use(errorHandler);
-
 
 app.listen(PORT, () => {});

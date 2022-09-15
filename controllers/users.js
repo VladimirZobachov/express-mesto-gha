@@ -5,15 +5,12 @@ const {
   OK,
   ERROR_CODE,
   NOT_FOUND,
-  ERROR_MESSAGE,
   ERROR_CODE_USER_MESSAGE,
   ERROR_CODE_USER_UPDATE_MESSAGE,
   ERROR_CODE_AVATAR_UPDATE_MESSAGE,
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
 } = require('../const');
-
-const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
 const createUser = async (req, res, next) => {
   const {
@@ -23,7 +20,7 @@ const createUser = async (req, res, next) => {
     about,
     avatar,
   } = req.body;
-  try{
+  try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       email,
@@ -33,10 +30,9 @@ const createUser = async (req, res, next) => {
       avatar,
     });
     res.send(user);
-  }catch(err){
+  } catch (err) {
     next(err);
   }
-
 };
 
 const getUsers = async (req, res, next) => {
