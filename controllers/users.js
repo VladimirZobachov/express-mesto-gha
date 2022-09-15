@@ -11,7 +11,6 @@ const {
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
 } = require('../const');
-const { NotFoundError, NotAuthError} = require('../midlewares/error');
 
 const createUser = async (req, res, next) => {
   const {
@@ -44,7 +43,7 @@ const getUsers = async (req, res, next) => {
     }
     return res.send(users);
   } catch (err) {
-    next(new NotAuthError('Не пройдена авторизация'));
+    next(err);
   }
 };
 

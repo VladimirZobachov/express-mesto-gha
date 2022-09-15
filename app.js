@@ -11,10 +11,6 @@ const { validateUserBody } = require('./validator');
 
 const app = express();
 
-const testing = () => {
-  console.log('testing...');
-}
-
 const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -25,7 +21,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.post('/signup', createUser, validateUserBody);
+app.post('/signup', validateUserBody, createUser);
 app.post('/signin', login);
 
 app.use(auth);
