@@ -19,7 +19,39 @@ class NotFoundError extends Error {
   }
 }
 
+class NotAuthError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
+
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
+
+class ForbiddenError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 403;
+  }
+}
+
+class DuplicateError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 409;
+  }
+}
+
 module.exports = {
   errorHandler,
   NotFoundError,
+  NotAuthError,
+  ValidationError,
+  ForbiddenError,
+  DuplicateError,
 };
