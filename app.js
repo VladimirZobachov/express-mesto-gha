@@ -6,6 +6,7 @@ const routers = require('./routes');
 const auth = require('./midlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const {errorHandler} = require("./midlewares/error");
+const {validateUserBody} = require("./validator");
 
 const app = express();
 
@@ -19,7 +20,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.post('/signup', createUser);
+app.post('/signup', createUser, validateUserBody);
 app.post('/signin', login);
 
 app.use(auth);
