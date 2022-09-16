@@ -28,5 +28,5 @@ const validateUserBody = celebrate({
 module.exports = {
   validateLink,
   validateUserBody,
-  validateLogin
+  validateLogin,
 };

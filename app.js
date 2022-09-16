@@ -9,7 +9,7 @@ const auth = require('./midlewares/auth');
 const { validateUserBody } = require('./utils/validator');
 const { createUser, login } = require('./controllers/users');
 const { errorHandler } = require('./midlewares/error');
-const { validateLogin } = require("./validator");
+const { validateLogin } = require('./validator');
 
 const { PORT = 3000 } = process.env;
 
