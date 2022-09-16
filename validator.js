@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+const DuplicateError = require('./midlewares/error');
 
 const validateLink = (link) => {
   const regex = /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-/])*)?/g;
@@ -18,7 +19,12 @@ const validateUserBody = celebrate({
   }),
 });
 
+const uniqueEmail = ()=>{
+  throw new DuplicateError('Поле емейл не уникально');
+}
+
 module.exports = {
   validateLink,
   validateUserBody,
+  uniqueEmail
 };

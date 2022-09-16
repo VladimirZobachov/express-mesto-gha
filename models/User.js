@@ -5,7 +5,6 @@ const { validateLink } = require('../utils/validator');
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    unique: true,
     required: [true, 'поле name является обязательным для заполнения'],
     validate: {
       validator(v) {
@@ -13,6 +12,7 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Введите пожалуйста Email',
     },
+    unique: true,
   },
   password: {
     type: String,
