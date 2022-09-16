@@ -19,12 +19,12 @@ const validateUserBody = celebrate({
   }),
 });
 
-const uniqueEmail = ()=>{
+const uniqueEmail = () => {
   throw new DuplicateError('Поле емейл не уникально');
-}
+};
 
 module.exports = {
   validateLink,
   validateUserBody,
-  uniqueEmail
+  uniqueEmail,
 };

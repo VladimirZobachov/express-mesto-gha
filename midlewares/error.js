@@ -12,22 +12,6 @@ const errorHandler = (err, req, res, next) => {
   next(err);
 };
 
-class NotAuthError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 401;
-  }
-}
-
-class DuplicateError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 409;
-  }
-}
-
 module.exports = {
   errorHandler,
-  NotAuthError,
-  DuplicateError,
 };

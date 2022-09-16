@@ -12,7 +12,8 @@ const {
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
 } = require('../utils/const');
-const {NotAuthError, DuplicateError} = require("../midlewares/error");
+const { NotAuthError } = require('../errorsClasses/NotAuthError');
+const { DuplicateError } = require('../errorsClasses/DuplicateError');
 
 const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
@@ -25,7 +26,7 @@ const createUser = async (req, res, next) => {
     avatar,
   } = req.body;
   try {
-    if(User.findOne(email)){
+    if (User.findOne(email)) {
       throw new DuplicateError('Такой email уже существует');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
