@@ -1,13 +1,12 @@
 const jwt = require('jsonwebtoken');
-const {NotAuthError} = require("./error");
 
-const auth = (res, req, next) => {
+const auth = (req, res, next) => {
+  const token = req.cookies.jwt;
   let payload;
   try {
-    const token = req.cookies.jwt;
     payload = jwt.verify(token, 'SECRET');
   } catch (err) {
-    next(new NotAuthError('Не пройдена авторизация'));
+    next(new Error('Вы не авторизованы!'));
   }
   req.user = payload;
   next();

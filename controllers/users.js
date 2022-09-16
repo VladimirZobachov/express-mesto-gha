@@ -5,12 +5,15 @@ const {
   OK,
   ERROR_CODE,
   NOT_FOUND,
+  ERROR_MESSAGE,
   ERROR_CODE_USER_MESSAGE,
   ERROR_CODE_USER_UPDATE_MESSAGE,
   ERROR_CODE_AVATAR_UPDATE_MESSAGE,
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
-} = require('../const');
+} = require('../utils/const');
+
+const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
 const createUser = async (req, res, next) => {
   const {
@@ -35,34 +38,34 @@ const createUser = async (req, res, next) => {
   }
 };
 
-const getUsers = async (req, res, next) => {
+const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
     if (!users) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USERS_MESSAGE);
     }
     return res.send(users);
-  } catch (err) {
-    next(err);
+  } catch (e) {
+    return defResponse(res);
   }
 };
 
-const getUserById = async (req, res, next) => {
+const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USER_MESSAGE);
     }
     return res.send(user);
-  } catch (err) {
-    if (err.name === 'CastError') {
+  } catch (e) {
+    if (e.name === 'CastError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_MESSAGE);
     }
-    next(err);
+    return defResponse(res);
   }
 };
 
-const updateUser = async (req, res, next) => {
+const updateUser = async (req, res) => {
   try {
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { name, about }, { new: true });
@@ -70,15 +73,15 @@ const updateUser = async (req, res, next) => {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_UPDATE_MESSAGE);
     }
     return res.status(OK).send(user);
-  } catch (err) {
-    if (err.name === 'ValidationError') {
+  } catch (e) {
+    if (e.name === 'ValidationError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_UPDATE_MESSAGE);
     }
-    next(err);
+    return defResponse(res);
   }
 };
 
-const updateUserAvatar = async (req, res, next) => {
+const updateUserAvatar = async (req, res) => {
   try {
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { avatar }, { new: true });
@@ -86,11 +89,11 @@ const updateUserAvatar = async (req, res, next) => {
       return res.status(ERROR_CODE).send(ERROR_CODE_AVATAR_UPDATE_MESSAGE);
     }
     return res.status(OK).send(user);
-  } catch (err) {
-    if (err.name === 'ValidationError') {
+  } catch (e) {
+    if (e.name === 'ValidationError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_AVATAR_UPDATE_MESSAGE);
     }
-    next(err);
+    return defResponse(res);
   }
 };
 

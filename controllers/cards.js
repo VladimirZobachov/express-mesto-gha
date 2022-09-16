@@ -11,7 +11,7 @@ const {
   OK_MESSAGE_DEL_CARD,
   ERROR_CODE_CARD_LIKE_MESSAGE,
 
-} = require('../const');
+} = require('../utils/const');
 
 const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
