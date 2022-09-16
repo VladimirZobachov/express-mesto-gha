@@ -52,18 +52,19 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.user._id);
+    console.log(req.cookies);
     if (!user) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USER_MESSAGE);
     }
     return res.send(user);
-  } catch (e) {
-    if (e.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'CastError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_MESSAGE);
     }
-    return defResponse(res);
+    next(err);
   }
 };
 
