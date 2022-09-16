@@ -4,7 +4,7 @@ const { NOT_FOUND, NOT_FOUND_PAGE_MESSAGE } = require('../utils/const');
 const userRoutes = express.Router();
 
 const {
-  getUsers, getUserById, updateUser, updateUserAvatar, login,
+  getUsers, getUserById, updateUser, updateUserAvatar,
 } = require('../controllers/users');
 
 userRoutes.get('/users', getUsers);

@@ -12,13 +12,6 @@ const errorHandler = (err, req, res, next) => {
   next(err);
 };
 
-class NotFoundError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 404;
-  }
-}
-
 class NotAuthError extends Error {
   constructor(message) {
     super(message);
@@ -26,32 +19,7 @@ class NotAuthError extends Error {
   }
 }
 
-class ValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 400;
-  }
-}
-
-class ForbiddenError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 403;
-  }
-}
-
-class DuplicateError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 409;
-  }
-}
-
 module.exports = {
   errorHandler,
-  NotFoundError,
   NotAuthError,
-  ValidationError,
-  ForbiddenError,
-  DuplicateError,
 };
