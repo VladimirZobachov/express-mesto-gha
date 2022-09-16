@@ -9,6 +9,7 @@ const auth = require('./midlewares/auth');
 const { validateUserBody } = require('./utils/validator');
 const { createUser, login } = require('./controllers/users');
 const { errorHandler } = require('./midlewares/error');
+const { validateEmail } = require("./validator");
 
 const { PORT = 3000 } = process.env;
 
@@ -23,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.post('/signup', validateUserBody, createUser);
-app.post('/signin', login);
+app.post('/signin', validateEmail, login);
 
 app.use(auth);
 app.use(userRoutes);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validEmail = require('validator');
-const { validateLink, uniqueEmail } = require('../utils/validator');
+const { validateLink } = require('../utils/validator');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Введите пожалуйста Email',
     },
-    unique: [true, uniqueEmail],
+    unique: [true],
   },
   password: {
     type: String,
