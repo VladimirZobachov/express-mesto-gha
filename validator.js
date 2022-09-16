@@ -20,7 +20,7 @@ const validateUserBody = celebrate({
 });
 
 const uniqueEmail = () => {
-  throw new DuplicateError('Поле емейл не уникально');
+  return new DuplicateError('Поле емейл не уникально');
 };
 
 module.exports = {
