@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Введите пожалуйста Email',
     },
-    unique: [ true, uniqueEmail],
+    unique: [true, uniqueEmail],
   },
   password: {
     type: String,

@@ -6,5 +6,5 @@ class NotAuthError extends Error {
 }
 
 module.exports = {
-  NotAuthError
+  NotAuthError,
 };

@@ -12,8 +12,8 @@ const {
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
 } = require('../utils/const');
-const {DuplicateError} = require("../errorsClasses/DuplicateError");
-const {NotAuthError} = require("../errorsClasses/NotAuthError");
+const { DuplicateError } = require('../errorsClasses/DuplicateError');
+const { NotAuthError } = require('../errorsClasses/NotAuthError');
 
 const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
 
@@ -105,8 +105,7 @@ const login = (req, res, next) => {
     .select('+password')
     .orFail(() => {
       throw new NotAuthError('Неправильная почта или пароль');
-    }
-    )
+    })
     .then((user) => {
       bcrypt.compare(password, user.password)
         .then((isUserValid) => {

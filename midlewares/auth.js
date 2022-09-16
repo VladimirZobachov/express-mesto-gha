@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const {NotAuthError} = require("../errorsClasses/NotAuthError");
+const { NotAuthError } = require('../errorsClasses/NotAuthError');
 
 const auth = (req, res, next) => {
   const token = req.cookies.jwt;
