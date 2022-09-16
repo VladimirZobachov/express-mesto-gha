@@ -55,7 +55,6 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    console.log(req.cookies);
     if (!user) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USER_MESSAGE);
     }
