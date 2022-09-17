@@ -25,8 +25,30 @@ const validateUserBody = celebrate({
   }),
 });
 
+const validateUpdateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+  }),
+});
+
+const validateUpdateAvatar = celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().custom(validateLink),
+  }),
+});
+
+const validateUserId = celebrate({
+  body: Joi.object().keys({
+    userId: Joi.string().length(24).hex(),
+  }),
+});
+
 module.exports = {
   validateLink,
   validateUserBody,
   validateLogin,
+  validateUpdateUser,
+  validateUpdateAvatar,
+  validateUserId
 };

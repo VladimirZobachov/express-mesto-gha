@@ -82,7 +82,7 @@ const getUserById = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { name, about }, { new: true });
@@ -90,11 +90,8 @@ const updateUser = async (req, res) => {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_UPDATE_MESSAGE);
     }
     return res.status(OK).send(user);
-  } catch (e) {
-    if (e.name === 'ValidationError') {
-      return res.status(ERROR_CODE).send(ERROR_CODE_USER_UPDATE_MESSAGE);
-    }
-    return defResponse(res);
+  } catch (err) {
+    next(err);
   }
 };
 
