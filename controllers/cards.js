@@ -1,58 +1,38 @@
 const Card = require('../models/Card');
-const {
-  OK,
-  ERROR_CODE,
-  NOT_FOUND,
-  ERROR_MESSAGE,
-  ERROR_CODE_CARD_MESSAGE,
-  ERROR_CODE_CARD_CREATE_MESSAGE,
-  NOT_FOUND_CARDS_MESSAGE,
-  NOT_FOUND_CARD_MESSAGE,
-  OK_MESSAGE_DEL_CARD,
-  ERROR_CODE_CARD_LIKE_MESSAGE,
+const { NotFoundError } = require('../errorsClasses/NotFoundError');
 
-} = require('../utils/const');
-
-const defResponse = (res) => res.status(ERROR_CODE).send(ERROR_MESSAGE);
-
-const createCard = async (req, res) => {
+const createCard = async (req, res, next) => {
   try {
     const { name, link } = req.body;
     const ref = req.user._id;
     const card = await new Card({ name, link, ref }).save();
-    return res.status(OK).send(card);
-  } catch (e) {
-    if (e.name === 'ValidationError') {
-      return res.status(ERROR_CODE).send(ERROR_CODE_CARD_CREATE_MESSAGE);
-    }
-    return defResponse();
+    return res.send(card);
+  } catch (err) {
+    return next(err);
   }
 };
 
-const getCards = async (req, res) => {
+const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
     if (!cards) {
-      return res.status(NOT_FOUND).send(NOT_FOUND_CARDS_MESSAGE);
+      throw new NotFoundError('Ничего не найдено');
     }
     return res.send(cards);
-  } catch (e) {
-    return defResponse();
+  } catch (err) {
+    return next(err);
   }
 };
 
-const delCardById = async (req, res) => {
+const delCardById = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndRemove(req.params.cardId);
     if (!card) {
-      return res.status(NOT_FOUND).send(NOT_FOUND_CARD_MESSAGE);
+      throw new NotFoundError('Карточка не найдена');
     }
-    return res.send(OK_MESSAGE_DEL_CARD);
-  } catch (e) {
-    if (e.name === 'CastError') {
-      return res.status(ERROR_CODE).send(ERROR_CODE_CARD_MESSAGE);
-    }
-    return defResponse();
+    return res.send('Карточка удалена');
+  } catch (err) {
+    return next(err);
   }
 };
 
@@ -64,17 +44,14 @@ const addLike = async (req, res) => {
       { new: true },
     );
     if (!req.user._id) {
-      return res.status(NOT_FOUND).send(ERROR_CODE_CARD_LIKE_MESSAGE);
+      throw new NotFoundError('Пользователь не найден');
     }
     if (!card) {
-      return res.status(NOT_FOUND).send(NOT_FOUND_CARD_MESSAGE);
+      throw new NotFoundError('Карточна не найдена');
     }
     return res.send(card);
-  } catch (e) {
-    if (e.name === 'CastError') {
-      return res.status(ERROR_CODE).send(ERROR_CODE_CARD_MESSAGE);
-    }
-    return defResponse();
+  } catch (err) {
+    return next(err);
   }
 };
 
@@ -86,14 +63,11 @@ const delLike = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      return res.status(NOT_FOUND).send(NOT_FOUND_CARD_MESSAGE);
+      throw new NotFoundError('Карточна не найдена');
     }
     return res.send(card);
-  } catch (e) {
-    if (e.name === 'CastError') {
-      return res.status(ERROR_CODE).send(ERROR_CODE_CARD_MESSAGE);
-    }
-    return defResponse();
+  } catch (err) {
+    return next(err);
   }
 };
 

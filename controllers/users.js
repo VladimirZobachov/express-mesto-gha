@@ -63,7 +63,7 @@ const getCurUser = async (req, res, next) => {
     if (err.name === 'CastError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_MESSAGE);
     }
-    next(err);
+    return next(err);
   }
 };
 
@@ -78,7 +78,7 @@ const getUserById = async (req, res, next) => {
     if (err.name === 'CastError') {
       return res.status(ERROR_CODE).send(ERROR_CODE_USER_MESSAGE);
     }
-    next(err);
+    return next(err);
   }
 };
 
@@ -91,7 +91,7 @@ const updateUser = async (req, res, next) => {
     }
     return res.status(OK).send(user);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 

@@ -6,9 +6,7 @@ const userRoutes = express.Router();
 const {
   getUsers, getUserById, updateUser, updateUserAvatar, getCurUser,
 } = require('../controllers/users');
-const {validateUserId, validateUpdateUser, validateUpdateAvatar} = require("../validator");
-
-
+const { validateUserId, validateUpdateUser, validateUpdateAvatar } = require('../validator');
 
 userRoutes.get('/users', getUsers);
 userRoutes.get('/users/me', getCurUser);
