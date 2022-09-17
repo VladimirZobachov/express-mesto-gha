@@ -52,9 +52,24 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res, next) => {
+const getCurUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(NOT_FOUND).send(NOT_FOUND_USER_MESSAGE);
+    }
+    return res.send(user);
+  } catch (err) {
+    if (err.name === 'CastError') {
+      return res.status(ERROR_CODE).send(ERROR_CODE_USER_MESSAGE);
+    }
+    next(err);
+  }
+};
+
+const getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
     if (!user) {
       return res.status(NOT_FOUND).send(NOT_FOUND_USER_MESSAGE);
     }
@@ -128,6 +143,7 @@ const login = (req, res, next) => {
 module.exports = {
   createUser,
   getUsers,
+  getCurUser,
   getUserById,
   updateUser,
   updateUserAvatar,
