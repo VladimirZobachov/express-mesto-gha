@@ -29,6 +29,11 @@ app.post('/signin', validateLogin, login);
 app.use(auth);
 app.use(userRoutes);
 app.use(cardRoutes);
+app.use((req, res, next) => {
+  res.status(404);
+  res.send({ message: 'страница не найдена' });
+  next();
+});
 app.use(errors());
 app.use(errorHandler);
 
