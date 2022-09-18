@@ -5,7 +5,7 @@ const cardRoutes = express.Router();
 const {
   createCard, getCards, delCardById, addLike, delLike,
 } = require('../controllers/cards');
-const {validateCardId, validateCardBody} = require("../validator");
+const { validateCardId, validateCardBody } = require('../validator');
 
 cardRoutes.get('/cards', getCards);
 cardRoutes.post('/cards', validateCardBody, createCard);
