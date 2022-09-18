@@ -1,7 +1,6 @@
 const Card = require('../models/Card');
 const { NotFoundError } = require('../errorsClasses/NotFoundError');
-const { ValidationError } = require('../errorsClasses/ValidationError');
-const {ForbiddenError} = require("../errorsClasses/ForbiddenError");
+const { ForbiddenError } = require('../errorsClasses/ForbiddenError');
 
 const createCard = async (req, res, next) => {
   const ref = req.user._id;
@@ -32,14 +31,13 @@ const delCardById = async (req, res, next) => {
     if (!card) {
       throw new NotFoundError('Карточка не найдена');
     }
-    if(card.ref.toString() === req.user._id){
+    if (card.ref.toString() === req.user._id) {
       await card.remove();
-      return res.send({message: 'Карточка удалена'});
-    }else{
-      next(new ForbiddenError('Это не ваша карточка'));
+      return res.send({ message: 'Карточка удалена' });
     }
+    return next(new ForbiddenError('Это не ваша карточка'));
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
