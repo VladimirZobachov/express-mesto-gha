@@ -14,9 +14,8 @@ userRoutes.get('/users/:userId', validateUserId, getUserById);
 userRoutes.patch('/users/me', validateUpdateUser, updateUser);
 userRoutes.patch('/users/me/avatar', validateUpdateAvatar, updateUserAvatar);
 
-userRoutes.use((req, res, next) => {
+userRoutes.use(() => {
   throw new NotFoundError('Страница не найдена');
-  next();
 });
 
 module.exports = { userRoutes };
