@@ -14,8 +14,12 @@ cardRoutes.delete('/cards/:cardId', validateCardId, delCardById);
 cardRoutes.put('/cards/:cardId/likes', validateCardId, addLike);
 cardRoutes.delete('/cards/:cardId/likes', validateCardId, delLike);
 
-cardRoutes.use(() => {
-  throw new NotFoundError('Страница не найдена');
+cardRoutes.use((req, res, next) => {
+  try {
+    return next();
+  } catch (e) {
+    return next(new NotFoundError('Страница не найдена'));
+  }
 });
 
 module.exports = { cardRoutes };
