@@ -1,5 +1,6 @@
 const Card = require('../models/Card');
 const { NotFoundError } = require('../errorsClasses/NotFoundError');
+const { ValidationError } = require('../errorsClasses/ValidationError');
 
 const createCard = async (req, res, next) => {
   const ref = req.user._id;
@@ -32,7 +33,7 @@ const delCardById = async (req, res, next) => {
     }
     return res.send('Карточка удалена');
   } catch (err) {
-    return next(err);
+    next(err);
   }
 };
 

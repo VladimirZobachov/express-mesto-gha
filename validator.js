@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+const mongoose = require('mongoose');
 
 const validateLink = (link) => {
   const regex = /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-/])*)?/g;
@@ -39,8 +40,13 @@ const validateUpdateAvatar = celebrate({
 });
 
 const validateUserId = celebrate({
-  body: Joi.object().keys({
-    userId: Joi.string().length(24).hex(),
+  params: Joi.object().keys({
+    userId: Joi.string().custom((value, helpers) => {
+      if (mongoose.Types.ObjectId.isValid(value)) {
+        return value;
+      }
+      return helpers.message('Невалидный id');
+    }),
   }),
 });
 
@@ -52,8 +58,13 @@ const validateCardBody = celebrate({
 });
 
 const validateCardId = celebrate({
-  body: Joi.object().keys({
-    cardId: Joi.string().length(24).hex(),
+  params: Joi.object().keys({
+    cardId: Joi.string().custom((value, helpers) => {
+      if (mongoose.Types.ObjectId.isValid(value)) {
+        return value;
+      }
+      return helpers.message('Невалидный id');
+    }),
   }),
 });
 
