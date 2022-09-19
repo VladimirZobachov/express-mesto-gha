@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validLink = require('../validator');
+const isURL = require('isurl');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: [true, 'поле link является обязательным для заполнения'],
     validate: {
       validator(v) {
-        return validLink.isURL(v);
+        return isURL(v);
       },
       message: 'Введите пожалуйста url',
     },
