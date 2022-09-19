@@ -1,6 +1,7 @@
 const Card = require('../models/Card');
 const { NotFoundError } = require('../errorsClasses/NotFoundError');
 const { ForbiddenError } = require('../errorsClasses/ForbiddenError');
+const { ValidationError } = require('../errorsClasses/ValidationError');
 
 const createCard = async (req, res, next) => {
   const ref = req.user._id;
@@ -9,6 +10,9 @@ const createCard = async (req, res, next) => {
     const card = await Card.create({ name, link, ref });
     return res.send(card);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new ValidationError('Некорректные данные при создании карточки'));
+    }
     return next(err);
   }
 };
@@ -16,9 +20,6 @@ const createCard = async (req, res, next) => {
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
-    if (!cards) {
-      return res.send('Ничего не найдено');
-    }
     return res.send(cards);
   } catch (err) {
     return next(err);
@@ -37,6 +38,9 @@ const delCardById = async (req, res, next) => {
     }
     return next(new ForbiddenError('Это не ваша карточка'));
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new ValidationError('Некорректные данные при удалении карточки'));
+    }
     return next(err);
   }
 };
@@ -48,14 +52,14 @@ const addLike = async (req, res, next) => {
       { $addToSet: { likes: req.user._id } },
       { new: true },
     );
-    if (!req.user._id) {
-      throw new NotFoundError('Пользователь не найден');
-    }
     if (!card) {
       throw new NotFoundError('Карточна не найдена');
     }
     return res.send(card);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new ValidationError('Некорректные дянные при добавлении лайка'));
+    }
     return next(err);
   }
 };
@@ -72,6 +76,9 @@ const delLike = async (req, res, next) => {
     }
     return res.send(card);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new ValidationError('Некорректные дянные при удалении лайка'));
+    }
     return next(err);
   }
 };
