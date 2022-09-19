@@ -13,7 +13,9 @@ const cardSchema = new mongoose.Schema({
     required: [true, 'поле link является обязательным для заполнения'],
     validate: {
       validator(v) {
-        return isURL(v);
+        if(isURL(new URL(v))){
+          return v;
+        };
       },
       message: 'Введите пожалуйста url',
     },
