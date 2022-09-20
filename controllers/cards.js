@@ -4,10 +4,10 @@ const { ForbiddenError } = require('../errorsClasses/ForbiddenError');
 const { ValidationError } = require('../errorsClasses/ValidationError');
 
 const createCard = async (req, res, next) => {
-  const ref = req.user._id;
+  const owner = req.user._id;
   try {
     const { name, link } = req.body;
-    const card = await Card.create({ name, link, ref });
+    const card = await Card.create({ name, link, owner });
     return res.send(card);
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -32,15 +32,12 @@ const delCardById = async (req, res, next) => {
     if (!card) {
       throw new NotFoundError('Карточка не найдена');
     }
-    if (card.ref.toString() === req.user._id) {
+    if (card.owner.toString() === req.user._id) {
       await card.remove();
       return res.send({ message: 'Карточка удалена' });
     }
     return next(new ForbiddenError('Это не ваша карточка'));
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ValidationError('Некорректные данные при удалении карточки'));
-    }
     return next(err);
   }
 };
@@ -57,9 +54,6 @@ const addLike = async (req, res, next) => {
     }
     return res.send(card);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ValidationError('Некорректные дянные при добавлении лайка'));
-    }
     return next(err);
   }
 };
@@ -76,9 +70,6 @@ const delLike = async (req, res, next) => {
     }
     return res.send(card);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ValidationError('Некорректные дянные при удалении лайка'));
-    }
     return next(err);
   }
 };

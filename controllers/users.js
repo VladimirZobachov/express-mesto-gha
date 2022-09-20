@@ -56,9 +56,6 @@ const getCurUser = async (req, res, next) => {
     }
     return res.send(user);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ValidationError('Некорректные дянные при получении пользователя'));
-    }
     return next(err);
   }
 };
@@ -71,9 +68,6 @@ const getUserById = async (req, res, next) => {
     }
     return res.send(user);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ValidationError('Некорректные дянные при получении пользователя'));
-    }
     return next(err);
   }
 };
